@@ -16,7 +16,7 @@
     <header>
         <h2 class="logo">Logo</h2>
         <nav class="navigation">
-            <a href="#">Home</a>
+            <a href="http://127.0.0.1:8000/home">Home</a>
             <a href="#">About</a>
             <a href="#">Services</a>
             <a href="#">Contact</a>
@@ -26,8 +26,17 @@
 
     <div class="wrapper">
         <span class="icon-close"><ion-icon name="close"></ion-icon></span>
-
-        <div class="form-box login">
+        <div class="container">
+            {% if messages %}
+                {% for messages in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ messages }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-box login" href="{% url 'login' %}">
             <h2>Login</h2>
             <form action="#">
                 <div class="input-box">
