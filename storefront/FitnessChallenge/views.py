@@ -71,3 +71,6 @@ def user_logout(request):
     messages.success(request, "Logged Out Successfully!")
     return redirect('home')
 
+def about(request):
+    return render(request, 'about.html')
+

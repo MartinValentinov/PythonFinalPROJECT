@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About us</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'about.css' %}">
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">Logo</h2>
+        <nav class="navigation">
+            <a href="home">Home</a>
+        </nav>
+    </header>
+    
+    <h1 class="what-h">What is our website?</h1>
+    <p class="what-p">Our website tells you the amount of macros for <br/> eating in a day based on age and weight.</p>
+    
+    <h1 class="how-h">How does it work?</h1>
+    <p class="how-p">Our website takes your weight and calculates a base diet.<br/>
+        After that we take the age and if it's high or low<br/>
+        we make the diet less intense.
+    </p>
+
+    <h1 class="who-h">Who are we and who did what?</h1>
+    <p class="who-p">We are Martin Valentinov and Kristiyan Kobarelov from 9A.<br/>
+        Kristiyan did...<br/>Martin did...
+    </p>
+
+    <a href="{% static 'pictures/Newer_Elsys_Logo.png' %}">
+        <img class="logo-abt" src="{% static 'pictures/Newer_Elsys_Logo.png' %}" alt="Logo">
+    </a>
+</body>
+</html>
