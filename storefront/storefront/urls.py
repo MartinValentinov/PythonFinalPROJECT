@@ -20,8 +20,5 @@ from FitnessChallenge import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('home/', views.home),
-    path('members', include('django.contrib.auth.urls')),
-    path('members', include('members.urls')),
+    path('', include('FitnessChallenge.urls')),
 ]
