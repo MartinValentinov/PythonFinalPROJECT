@@ -28,8 +28,6 @@
             <a href="#">Contact</a>
 
             {% if user.is_authenticated %}
-            <h3>Hello {{ fname }}</h3>
-            <h4>You've successfully logged in!</h4>
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button class="btnLog" type="submit">Log Out</button>

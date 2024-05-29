@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url("pictures/gym-motivation-movie-ruu7q29ozktj58q7.jpg") no-repeat;
+    background: url('pictures/gym-motivation-movie-ruu7q29ozktj58q7.jpg') no-repeat;
     background-size: cover;
     background-position: center;
     flex-direction: column;
@@ -161,14 +161,14 @@ body {
 
 .login-register {
     font-size: .9em;
-    color: #162938;
+    color: #20455e;
     text-align: center;
     font-weight: 500;
     margin: 25px 0 10px;
 }
 
 .login-register p a {
-    color: #162938;
+    color: #20455e;
     text-decoration: none;
     font-weight: 600;
 }

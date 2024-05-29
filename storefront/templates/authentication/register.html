@@ -4,48 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,
-    initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     {% load static %}
-    <link rel="stylesheet" href="{%static 'register.css'%}">
+    <link rel="stylesheet" href="{% static 'register.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'script.js' %}"></script>
+    <script type="module" src="http://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="http://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body>
+    <div class="wrapper active-popup">
+        <div id="closeBtn" class="icon-close"><ion-icon name="close"></ion-icon></div>
 
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        <strong>Message:</strong> {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="form-box login">
+            <h2>Register</h2>
+            <form id="registrationForm" action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                <div id="step1" class="form-step">
+                    <div class="input-box">
+                        <input type="text" id="username" name="username" required>
+                        <span class="icon"><ion-icon name="person"></ion-icon></span>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="text" id="fname" name="fname" required>
+                        <span class="icon"><ion-icon name="people"></ion-icon></span>
+                        <label for="fname">First Name</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="text" id="lname" name="lname" required>
+                        <span class="icon"><ion-icon name="people"></ion-icon></span>
+                        <label for="lname">Last Name</label>
+                    </div>
+                    {% if messages %}
+                    <div class="alert alert-warning">
+                        {% for message in messages %}
+                            <strong>Error:</strong> {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div id="step1-error" class="alert alert-danger" role="alert" style="display: none;"></div>
+                    <button id="nextButton" class="btn" type="button" onclick="nextStep()" disabled>Next</button>
+                </div>
+
+                <div id="step2" class="form-step" style="display:none;">
+                    <div class="input-box">
+                        <input type="email" id="email" name="email" required>
+                        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                        <label for="email">Email Address</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="pass1" name="pass1" required>
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <label for="pass1">Password</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" id="pass2" name="pass2" required>
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <label for="pass2">Confirm Password</label>
+                    </div>
+                    <button class="btn" type="submit">Register</button>
+                </div>
+            </form>
+            <div class="login-register">
+                <p>Already have an account? <a href="{% url 'login' %}"><strong>Log In</strong></a></p>
+            </div>
+        </div>
     </div>
-    {% endfor %}
 
-    <h3>Register</h3>
+    <script>
+        function nextStep() {
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            document.querySelector('.wrapper').style.height = 'auto'; 
+        }
 
-   <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <label form="">Username</label>
-        <input type="text" id="username" name="username" placeholder="Create An Username" required>
-        <br>
-        <label form="">First Name</label>
-        <input type="text" id="fname" name="fname" placeholder="Enter Your First Name" required>
-        <br>
-        <label form="">Last Name</label>
-        <input type="text" id="lname" name="lname" placeholder="Enter Your Last Name" required>
-        <br>
-        <label form="">Email Address</label>
-        <input type="email" id="email" name="email" placeholder="Enter Your Email Address" required>
-        <br>
-        <label form="">Password</label>
-        <input type="password" id="pass1" name="pass1" placeholder="Create A Password" required>
-        <br>
-        <label form="">Confirm Password</label>
-        <input type="password" id="pass2" name="pass2" placeholder="Create Your Password" required>
-        <br>
-        <button type="submit">Register</button>
-    </form>
+        function validateStep1() {
+            const username = document.getElementById('username').value;
+            const fname = document.getElementById('fname').value;
+            const lname = document.getElementById('lname').value;
 
+            const nextButton = document.getElementById('nextButton');
+            nextButton.disabled = !(username && fname && lname);
+        }
+
+        document.getElementById('username').addEventListener('input', validateStep1);
+        document.getElementById('fname').addEventListener('input', validateStep1);
+        document.getElementById('lname').addEventListener('input', validateStep1);
+
+        document.querySelectorAll('.input-box input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value !== "") {
+                    this.classList.add('not-empty');
+                } else {
+                    this.classList.remove('not-empty');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    </script>
+    
 </body>
+
 </html>

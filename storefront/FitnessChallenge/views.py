@@ -39,8 +39,6 @@ def register(request):
         myuser.last_name = lname
         myuser.save()
 
-        messages.success(request, 'You have successfully created an account! We have sent you a confirmation email, please confirm your account.')
-
         user = authenticate(username=username, password=pass1)
         if user is not None:
             login(request, user)
@@ -68,7 +66,6 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    messages.success(request, "Logged Out Successfully!")
     return redirect('home')
 
 def about(request):
