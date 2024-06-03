@@ -86,7 +86,6 @@ header {
     color: #FFF;
     font-weight: 500;
     transition: .5s;
-    position: absolute;
 }
 
 .navigation .btnLog:hover {
