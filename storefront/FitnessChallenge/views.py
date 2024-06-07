@@ -71,3 +71,12 @@ def user_logout(request):
 def about(request):
     return render(request, 'about.html')
 
+class Diets:
+    def slim_diet(self, request):
+        return render(request, 'slim_diet.html')
+    
+    def avr_diet(self, request):
+        return render(request, 'avr_diet.html')
+    
+    def bulk_diet(self, request):
+        return render(request, 'bulk_diet.html')
