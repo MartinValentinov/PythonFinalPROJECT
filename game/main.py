@@ -1,5 +1,5 @@
-import pygame
 from constants import *
+from animations import *
 from sys import exit
 
 pygame.init()
@@ -15,6 +15,8 @@ ground_surface = pygame.transform.scale(ground_surface, (WIDTH, HEIGHT//4.5))
 ground_surface_rect = ground_surface.get_rect(topleft = (0, HEIGHT - HEIGHT//4.5))
 
 while True:
+    keys = pygame.key.get_pressed()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -22,6 +24,9 @@ while True:
 
     screen.blit(sky_surface, sky_surface_rect)
     screen.blit(ground_surface, ground_surface_rect)
+
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        player_move_left_animations()
 
     pygame.display.update()
     clock.tick(60)
