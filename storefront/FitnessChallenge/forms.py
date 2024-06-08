@@ -2,6 +2,7 @@ from django import forms
 from .models import DietCalculator, CaloriesCalculator
 from django.core.validators import EmailValidator
 
+
 class DietCalculatorForm(forms.ModelForm):
     class Meta:
         model = DietCalculator
