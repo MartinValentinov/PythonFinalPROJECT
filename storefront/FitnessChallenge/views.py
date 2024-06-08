@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm, ContactForm, CalculatorForm
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -165,23 +166,25 @@ def contact(request):
 def success(request):
     return render(request, 'authentication/index.html')
 
-
 def calories_burned(request):
     if request.method == 'POST':
         form = CalculatorForm(request.POST)
         
-        if run:
+        if form.is_valid():
             run = form.cleaned_data['kilometers_ran']
             walk = form.cleaned_data['kilometers_walked']
             if run > 0:
-                run = run // 0.085
-                walk = walk // 0.05
-                calories = run / 65 + walk / 54
-                return render(request, 'calculator/calculator_results.html')
+                run = run // Decimal('0.085')
+                walk = walk // Decimal('0.05')
+                calories = run / Decimal('65') + walk / Decimal('54')
+                calories_rounded = Decimal(round(calories, 1))
+                return render(request, 'calculator/calculator_results.html', {'calories': calories_rounded})
+            else:
+                error_message = 'Please provide valid kilometers ran'
+                messages.error(request, error_message)
         else:
-            error_message = 'Please provide valid kilometers ran'
+            error_message = 'Form is invalid'
             messages.error(request, error_message)
-        
     else:
-        return render(request, 'calculator/calculator.html')
-
+        form = CalculatorForm()
+    return render(request, 'calculator/calculator.html', {'form': form})
