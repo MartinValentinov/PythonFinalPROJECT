@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm, ContactForm, CalculatorForm
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -156,8 +157,19 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid:
-            # Process the data
-            return redirect(request, '')
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            EmailMessage(
+                'Contact form Submission from {}'.format(name),
+                message,
+                'form-response@example.com',
+                ['kobarelov.k@gmail.com'],
+                [],
+                reply_to = [email]
+            ).send()
+            return redirect('contacts/contact_success.html')
     else:
         form = ContactForm()
     return render(request, 'contacts/contact.html', {'form': form})
