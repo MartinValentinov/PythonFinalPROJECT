@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diet List</title>
+</head>
+<body>
+    <h1>Diet List</h1>
+    <ul>
+        {% for diet in diets %}
+            <li>
+                <a href="{% url 'diet_detail' diet.id %}">
+                    <img src="{{ diet.image.url }}" alt="{{ diet.name }}">
+                    {{ diet.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

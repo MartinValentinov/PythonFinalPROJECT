@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import DietCalculator
+from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm
 
 def home(request):
@@ -27,6 +27,7 @@ def register(request):
         
         if len(username) > 10:
             messages.error(request, "Username is too long!")
+            return redirect('register')
 
         if pass1 != pass2:
             messages.error(request, "Passwords didn't match!")
@@ -44,8 +45,7 @@ def register(request):
         user = authenticate(username=username, password=pass1)
         if user is not None:
             login(request, user)
-
-        return redirect('home')  
+            return redirect('home')  
 
     return render(request, 'authentication/register.html')
 
@@ -73,9 +73,6 @@ def user_logout(request):
 def about(request):
     return render(request, 'about.html')
 
-from django.shortcuts import render, redirect
-from .forms import DietCalculatorForm
-
 def diet_calculator(request):
     if request.method == 'POST':
         form = DietCalculatorForm(request.POST)
@@ -89,15 +86,15 @@ def diet_calculator(request):
             
             bmr = calculate_bmr(weight, age, height, sex)
             recommended_calories = calculate_calories(bmr, activity, goal)
-            
+
             form.instance.bmr = bmr
             form.instance.recommended_calories = recommended_calories
 
-            form.save()
-            
+            diet = form.save()
+
             return render(request, 'diets/diet_calculator_result.html', {
-                'bmr': bmr,
-                'recommended_calories': recommended_calories
+                'recommended_calories': recommended_calories,
+                'diet_id': diet.id,
             })
     else:
         form = DietCalculatorForm()
@@ -105,8 +102,8 @@ def diet_calculator(request):
 
 def calculate_bmr(weight, age, height, sex):
     weight = float(weight)
-    height = float(height)
     age = int(age)
+    height = float(height)
 
     if sex == 'male':
         bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
@@ -130,3 +127,19 @@ def calculate_calories(bmr, activity, goal):
         calories += 500 
 
     return round(calories, 2)
+
+def diet_list(request):
+    diets = Diet.objects.all()
+    return render(request, 'diets/diet_list.html', {'diets': diets})
+
+def diet_detail(request, diet_id):
+    diet = get_object_or_404(Diet, pk=diet_id)
+    return render(request, 'diets/diet_detail.html', {'diet': diet})
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, 'diets/product_detail.html', {'product': product})
+
+def ingredient_detail(request, ingredient_id):
+    ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
+    return render(request, 'diets/ingredient_detail.html', {'ingredient': ingredient})

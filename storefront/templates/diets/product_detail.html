@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <h2>Ingredients</h2>
+    <ul>
+        {% for ingredient in product.ingredients.all %}
+            <li>
+                <a href="{% url 'ingredient_detail' ingredient.id %}">{{ ingredient.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

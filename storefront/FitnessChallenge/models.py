@@ -34,3 +34,27 @@ class DietCalculator(models.Model):
 
     def __str__(self):
         return f"Diet Calculator: {self.pk}"
+
+class Diet(models.Model):
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='diets/')
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    diet = models.ForeignKey(Diet, related_name='products', on_delete=models.CASCADE)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Ingredient(models.Model):
+    name = models.CharField(max_length=100)
+    product = models.ForeignKey(Product, related_name='ingredients', on_delete=models.CASCADE)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name

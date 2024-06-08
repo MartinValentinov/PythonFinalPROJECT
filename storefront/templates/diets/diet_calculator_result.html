@@ -5,7 +5,9 @@
 </head>
 <body>
     <h1>Diet Calculator Result</h1>
-    <p>Your BMR: {{ bmr }}</p>
     <p>Recommended Calories: {{ recommended_calories }}</p>
+    <h3>If you are interested, you can see the diet we have created for you by clicking the link 
+        <button class='recom_diet' type='button' onclick='location.href="{% url 'diet_detail' diet_id %}"'>here</button>
+    </h3>
 </body>
 </html>
