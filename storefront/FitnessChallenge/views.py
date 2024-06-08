@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .models import DietCalculator
+from .forms import DietCalculatorForm
 
 def home(request):
     return render(request, 'authentication/index.html')
@@ -71,12 +73,60 @@ def user_logout(request):
 def about(request):
     return render(request, 'about.html')
 
-class Diets:
-    def slim_diet(self, request):
-        return render(request, 'slim_diet.html')
-    
-    def avr_diet(self, request):
-        return render(request, 'avr_diet.html')
-    
-    def bulk_diet(self, request):
-        return render(request, 'bulk_diet.html')
+from django.shortcuts import render, redirect
+from .forms import DietCalculatorForm
+
+def diet_calculator(request):
+    if request.method == 'POST':
+        form = DietCalculatorForm(request.POST)
+        if form.is_valid():
+            weight = form.cleaned_data['weight']
+            age = form.cleaned_data['age']
+            height = form.cleaned_data['height']
+            sex = form.cleaned_data['sex']
+            activity = form.cleaned_data['activity']
+            goal = form.cleaned_data['goal']
+            
+            bmr = calculate_bmr(weight, age, height, sex)
+            recommended_calories = calculate_calories(bmr, activity, goal)
+            
+            form.instance.bmr = bmr
+            form.instance.recommended_calories = recommended_calories
+
+            form.save()
+            
+            return render(request, 'diets/diet_calculator_result.html', {
+                'bmr': bmr,
+                'recommended_calories': recommended_calories
+            })
+    else:
+        form = DietCalculatorForm()
+    return render(request, 'diets/diet_calculator.html', {'form': form})
+
+def calculate_bmr(weight, age, height, sex):
+    weight = float(weight)
+    height = float(height)
+    age = int(age)
+
+    if sex == 'male':
+        bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+    else:
+        bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
+    return round(bmr, 2)
+
+def calculate_calories(bmr, activity, goal):
+    activity_multiplier = {
+        'sedentary': 1.2,
+        'light': 1.375,
+        'moderate': 1.55,
+        'active': 1.725,
+        'very_active': 1.9
+    }
+    calories = bmr * activity_multiplier[activity]
+
+    if goal == 'lose':
+        calories -= 500
+    elif goal == 'gain':
+        calories += 500 
+
+    return round(calories, 2)

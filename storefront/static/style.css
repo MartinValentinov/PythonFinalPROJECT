@@ -50,12 +50,7 @@ header {
     margin-left: 40px;
 }
 
-.navigation form {
-    position: relative;
-    margin-left: auto;
-}
-
-.navigation a::after, .navigation form::after {
+.navigation a::after{
     content: '';
     position: absolute;
     left: 0;
@@ -69,7 +64,7 @@ header {
     transition: transform .5s;
 }
 
-.navigation a:hover::after, .navigation form:hover::after {
+.navigation a:hover::after{
     transform-origin: left;
     transform: scaleX(1);
 }
@@ -86,6 +81,7 @@ header {
     color: #FFF;
     font-weight: 500;
     transition: .5s;
+    margin-left: 40px;
 }
 
 .navigation .btnLog:hover {
