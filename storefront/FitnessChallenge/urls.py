@@ -12,4 +12,7 @@ urlpatterns = [
     path('diet/<int:diet_id>/', views.diet_detail, name='diet_detail'),  # Ensure this is correct
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('ingredient/<int:ingredient_id>/', views.ingredient_detail, name='ingredient_detail'),
+    path('contacts/', views.contact, name = 'contact'),
+    path('contacts/', views.success, name = 'contact_success'),
+    path('calculator/', views.calories_burned, name = 'calories_burned'),
 ]
