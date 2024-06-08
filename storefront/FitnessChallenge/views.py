@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
-from .forms import DietCalculatorForm, ContactForm, CalculatorFor
+from .forms import DietCalculatorForm, ContactForm, CalculatorForm
 from decimal import Decimal
 from django.core.mail import EmailMessage
 
