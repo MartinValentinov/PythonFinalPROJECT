@@ -1,9 +1,13 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm
+
+logger = logging.getLogger(__name__)
+
 
 def home(request):
     return render(request, 'authentication/index.html')
@@ -87,18 +91,25 @@ def diet_calculator(request):
             bmr = calculate_bmr(weight, age, height, sex)
             recommended_calories = calculate_calories(bmr, activity, goal)
 
-            form.instance.bmr = bmr
-            form.instance.recommended_calories = recommended_calories
-
-            diet = form.save()
+            diet = form.save(commit=False)
+            diet.bmr = bmr
+            diet.recommended_calories = recommended_calories
+            diet.save()
+            logger.info(f"Diet created with ID: {diet.id}")
 
             return render(request, 'diets/diet_calculator_result.html', {
                 'recommended_calories': recommended_calories,
                 'diet_id': diet.id,
             })
+        else:
+            logger.error("Form is not valid: %s", form.errors)
     else:
         form = DietCalculatorForm()
     return render(request, 'diets/diet_calculator.html', {'form': form})
+
+def diet_detail(request, diet_id):
+    diet = get_object_or_404(Diet, pk=diet_id)
+    return render(request, 'diets/diet_detail.html', {'diet': diet})
 
 def calculate_bmr(weight, age, height, sex):
     weight = float(weight)
@@ -126,15 +137,7 @@ def calculate_calories(bmr, activity, goal):
     elif goal == 'gain':
         calories += 500 
 
-    return round(calories, 2)
-
-def diet_list(request):
-    diets = Diet.objects.all()
-    return render(request, 'diets/diet_list.html', {'diets': diets})
-
-def diet_detail(request, diet_id):
-    diet = get_object_or_404(Diet, pk=diet_id)
-    return render(request, 'diets/diet_detail.html', {'diet': diet})
+    return round(calories, 1)
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
@@ -143,3 +146,7 @@ def product_detail(request, product_id):
 def ingredient_detail(request, ingredient_id):
     ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
     return render(request, 'diets/ingredient_detail.html', {'ingredient': ingredient})
+
+def diet_list(request):
+    diets = Diet.objects.all()
+    return render(request, 'diets/diet_list.html', {'diets': diets})
