@@ -140,3 +140,8 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '9d9b8c53921e51'
+EMAIL_HOST_PASSWORD = '2fd2aa582ef497'
+EMAIL_PORT = '2525'
