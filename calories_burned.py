@@ -21,13 +21,13 @@ def walk_burned(request):
 
         if walk:
             walk = float(walk)
-            if walk < 0:
+            if walk > 0:
+                walk = walk // 0.05
+                calories = walk / 45
                 return render(request)
-            walk = walk // 0.05
-            calories = walk / 45
-            return render(request)
         else:
             error_message = 'Please provide valid kilometers walked'
+            messages.error(request, error_message)
 
     else:
         return render(request)
