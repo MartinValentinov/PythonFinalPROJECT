@@ -155,24 +155,23 @@ def diet_list(request):
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             name = form.cleaned_data['name']
             phone = form.cleaned_data['phone']
             subject = form.cleaned_data['subject']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
 
-            EmailMessage(
+            email_message = EmailMessage(
                 'Contact form Submission from {}'.format(name),
-                'Phone number is {}'.format(phone),
-                subject,
-                message,
+                'Phone number is {}. Message: {}'.format(phone, message),
                 email,
                 ['kobarelov.k@gmail.com'],
-                [],
-                reply_to = [email]
-            ).send()
-            return redirect('contacts/contact_success.html')
+                reply_to=[email]
+            )
+            email_message.send()
+
+            return redirect('contact_success')
     else:
         form = ContactForm()
     return render(request, 'contacts/contact.html', {'form': form})
