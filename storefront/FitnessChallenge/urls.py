@@ -15,4 +15,5 @@ urlpatterns = [
     path('contacts/', views.contact, name = 'contact'),
     path('contacts/', views.success, name = 'contact_success'),
     path('calculator/', views.calories_burned, name = 'calories_burned'),
+    path('diets/', views.calculate_protein, name = 'calculate_protein')
 ]

@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm, ContactForm, CalculatorForm
 from django.core.mail import EmailMessage
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -91,8 +92,10 @@ def diet_calculator(request):
             
             bmr = calculate_bmr(weight, age, height, sex)
             recommended_calories = calculate_calories(bmr, activity, goal)
+            protein_intake = calculate_protein(request, weight)
 
             diet = form.save(commit=False)
+            diet.protein_intake = protein_intake
             diet.bmr = bmr
             diet.recommended_calories = recommended_calories
             diet.save()
@@ -101,6 +104,7 @@ def diet_calculator(request):
             return render(request, 'diets/diet_calculator_result.html', {
                 'recommended_calories': recommended_calories,
                 'diet_id': diet.id,
+                'protein_intake': protein_intake,
             })
         else:
             logger.error("Form is not valid: %s", form.errors)
@@ -148,6 +152,11 @@ def ingredient_detail(request, ingredient_id):
     ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
     return render(request, 'diets/ingredient_detail.html', {'ingredient': ingredient})
 
+def calculate_protein(request, weight):
+    if request.method == 'POST':
+        protein_intake = weight * Decimal('2.2')
+        return protein_intake
+    
 def diet_list(request):
     diets = Diet.objects.all()
     return render(request, 'diets/diet_list.html', {'diets': diets})
@@ -164,7 +173,7 @@ def contact(request):
 
             email_message = EmailMessage(
                 'Contact form Submission from {}'.format(name),
-                'Phone number is {}. Message: {}'.format(phone, message),
+                'Phone number is {}. Subject is {}. Message: {}'.format(phone, subject, message),
                 email,
                 ['kobarelov.k@gmail.com'],
                 reply_to=[email]
