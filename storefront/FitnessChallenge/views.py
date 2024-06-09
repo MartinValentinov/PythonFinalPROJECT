@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import DietCalculator, Diet, Product, Ingredient
 from .forms import DietCalculatorForm, ContactForm, CalculatorForm
 from decimal import Decimal
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -155,9 +156,24 @@ def diet_list(request):
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
-        if form.is_valid():
-            # Process the data
-            return redirect('contact_success')
+        if form.is_valid:
+            name = form.cleaned_data['name']
+            phone = form.cleaned_data['phone']
+            subject = form.cleaned_data['subject']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            EmailMessage(
+                'Contact form Submission from {}'.format(name),
+                'Phone number is {}'.format(phone),
+                subject,
+                message,
+                email,
+                ['kobarelov.k@gmail.com'],
+                [],
+                reply_to = [email]
+            ).send()
+            return redirect('contacts/contact_success.html')
     else:
         form = ContactForm()
     return render(request, 'contacts/contact.html', {'form': form})
@@ -173,9 +189,9 @@ def calories_burned(request):
             run = form.cleaned_data['kilometers_ran']
             walk = form.cleaned_data['kilometers_walked']
             if run > 0:
-                run = run // Decimal('0.085')
-                walk = walk // Decimal('0.05')
-                calories = run / Decimal('65') + walk / Decimal('54')
+                run = run * 850
+                walk = walk * 500
+                calories = run / Decimal('50') + walk / Decimal('45')
                 calories_rounded = Decimal(round(calories, 1))
                 return render(request, 'calculator/calculator_results.html', {'calories': calories_rounded})
             else:
