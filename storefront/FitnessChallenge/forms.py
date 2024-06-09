@@ -18,4 +18,4 @@ class ContactForm(forms.Form):
 class CalculatorForm(forms.ModelForm):
     class Meta:
         model = CaloriesCalculator
-        fields = ['kilometers_ran', 'kilometers_walked']
+        fields = ['weight', 'kilometers_ran', 'kilometers_walked']

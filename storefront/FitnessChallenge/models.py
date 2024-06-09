@@ -60,5 +60,6 @@ class Ingredient(models.Model):
         return self.name
 
 class CaloriesCalculator(models.Model):
-    kilometers_ran = models.DecimalField(max_digits = 3, decimal_places = 2, help_text = 'Kilometers ran')
-    kilometers_walked = models.DecimalField(max_digits = 3, decimal_places = 2, help_text = 'Kilometers walked')
+    weight = models.FloatField(help_text = 'How much do you weight?')
+    kilometers_ran = models.FloatField(help_text = 'Kilometers ran')
+    kilometers_walked = models.FloatField(help_text = 'Kilometers walked')
