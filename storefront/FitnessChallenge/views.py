@@ -207,10 +207,12 @@ def calories_burned(request):
                 else:
                     walk = 0
 
+                steps = 1250 * (run + walk)
+                steps = round(steps, 0)
                 calories = run + walk
                 calories_rounded = round(calories, 1)
 
-                return render(request, 'calculator/calculator_results.html', {'calories': calories_rounded})
+                return render(request, 'calculator/calculator_results.html', {'calories': calories_rounded, 'steps': steps})
             else:
                 error_message = 'Please provide a valid weight'
                 messages.error(request, error_message)
